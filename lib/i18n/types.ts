@@ -34,7 +34,8 @@ export type Project = {
   tags: string[];
   link: string;
   gradient: string;
-  emoji: string;
+  /** Ruta de la captura dentro de /public. */
+  image: string;
 };
 
 export type Stat = {

@@ -165,36 +165,35 @@ export const es: Dictionary = {
   portfolio: {
     eyebrow: "Portafolio",
     title: "Proyectos destacados",
-    subtitle:
-      "Una muestra del trabajo que he construido. Los espacios en blanco son tuyos: rellénalos con tus proyectos reales.",
+    subtitle: "Una muestra de proyectos reales, en producción.",
     more: "Ver más en GitHub",
     projects: [
       {
-        title: "Proyecto 01",
+        title: "Mi Canasta",
         description:
-          "Reserva este espacio para mostrar tu próximo proyecto destacado. Reemplázalo por el trabajo que quieras exhibir.",
-        tags: ["Next.js", "TypeScript", "Supabase"],
-        link: "https://github.com/Josmarsanteliz",
+          "Comparador de precios de supermercados en tiempo real con web scraping y tasa BCV integrada.",
+        tags: ["Astro", "Supabase", "Tailwind CSS"],
+        link: "https://jdevcanasta.netlify.app/",
         gradient: "from-paprika to-paprika-deep",
-        emoji: "💻",
+        image: "/Proyectos/Screenshot_4.png",
       },
       {
-        title: "Proyecto 02",
+        title: "Josmartecnology",
         description:
-          "Agrega una captura, una descripción corta y el enlace al proyecto real cuando lo tengas listo.",
-        tags: ["React", "Tailwind CSS"],
-        link: "https://github.com/Josmarsanteliz",
+          "Tienda en línea de tecnología con catálogo, precios en USD y Bs. y panel de administración.",
+        tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+        link: "https://josmartecnology.vercel.app/",
         gradient: "from-carbon to-charcoal",
-        emoji: "🚀",
+        image: "/Proyectos/JosmarDevTecnology.png",
       },
       {
-        title: "Proyecto 03",
+        title: "Agentic",
         description:
-          "Cuenta qué problema resolviste y qué tecnologías usaste para llegar al resultado.",
-        tags: ["Node.js", "PostgreSQL"],
-        link: "https://github.com/Josmarsanteliz",
+          "Landing de plataforma de agentes de IA con constructor visual, monitoreo en tiempo real y flujos autónomos.",
+        tags: ["Next.js", "React", "Tailwind CSS"],
+        link: "https://agentic-build-orchestrate-a-one-lake.vercel.app/",
         gradient: "from-silver to-charcoal",
-        emoji: "⚙️",
+        image: "/Proyectos/Agentic.jpg",
       },
     ],
   },

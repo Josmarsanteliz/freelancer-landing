@@ -165,36 +165,35 @@ export const en: Dictionary = {
   portfolio: {
     eyebrow: "Portfolio",
     title: "Featured projects",
-    subtitle:
-      "A sample of the work I've built. The blank spaces are yours: fill them in with your real projects.",
+    subtitle: "A sample of real projects, running in production.",
     more: "See more on GitHub",
     projects: [
       {
-        title: "Project 01",
+        title: "Mi Canasta",
         description:
-          "Reserve this space to showcase your next standout project. Replace it with the work you want to exhibit.",
-        tags: ["Next.js", "TypeScript", "Supabase"],
-        link: "https://github.com/Josmarsanteliz",
+          "Real-time supermarket price comparator with web scraping and the BCV exchange rate built in.",
+        tags: ["Astro", "Supabase", "Tailwind CSS"],
+        link: "https://jdevcanasta.netlify.app/",
         gradient: "from-paprika to-paprika-deep",
-        emoji: "💻",
+        image: "/Proyectos/Screenshot_4.png",
       },
       {
-        title: "Project 02",
+        title: "Josmartecnology",
         description:
-          "Add a screenshot, a short description and the link to the real project when you have it ready.",
-        tags: ["React", "Tailwind CSS"],
-        link: "https://github.com/Josmarsanteliz",
+          "Online tech store with a product catalog, prices in USD and Bs. and an admin panel.",
+        tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+        link: "https://josmartecnology.vercel.app/",
         gradient: "from-carbon to-charcoal",
-        emoji: "🚀",
+        image: "/Proyectos/JosmarDevTecnology.png",
       },
       {
-        title: "Project 03",
+        title: "Agentic",
         description:
-          "Describe the problem you solved and which technologies you used to get to the result.",
-        tags: ["Node.js", "PostgreSQL"],
-        link: "https://github.com/Josmarsanteliz",
+          "Landing page for an AI agent platform with a visual builder, real-time monitoring and autonomous workflows.",
+        tags: ["Next.js", "React", "Tailwind CSS"],
+        link: "https://agentic-build-orchestrate-a-one-lake.vercel.app/",
         gradient: "from-silver to-charcoal",
-        emoji: "⚙️",
+        image: "/Proyectos/Agentic.jpg",
       },
     ],
   },

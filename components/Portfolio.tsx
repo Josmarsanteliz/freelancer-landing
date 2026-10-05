@@ -31,11 +31,14 @@ export default function Portfolio() {
               className="group overflow-hidden rounded-3xl border border-silver bg-white transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-carbon/5"
             >
               <div
-                className={`flex h-44 items-center justify-center bg-gradient-to-br ${project.gradient}`}
+                className={`relative h-44 overflow-hidden bg-gradient-to-br ${project.gradient}`}
               >
-                <span className="text-5xl drop-shadow-md transition-transform duration-300 group-hover:scale-110">
-                  {project.emoji}
-                </span>
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  loading="lazy"
+                  className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                />
               </div>
               <div className="p-6">
                 <div className="flex items-center justify-between">
