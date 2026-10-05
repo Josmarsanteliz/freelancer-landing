@@ -153,6 +153,16 @@ export type Dictionary = {
       sending: string;
       success: string;
       error: string;
+      /** Pista bajo el campo de mensaje (siempre visible). */
+      hintMessage: string;
+      /** Avisos de validación campo a campo. */
+      errorName: string;
+      errorEmail: string;
+      errorMessage: string;
+      /** Mensaje al agotar los 2 envíos permitidos cada 24 h. */
+      limit: string;
+      /** Aviso con {n}, envíos que quedan en la ventana actual. */
+      remaining: string;
     };
   };
   footer: {

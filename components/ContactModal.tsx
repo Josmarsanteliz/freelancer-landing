@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type FormEvent,
   type ReactNode,
@@ -14,6 +15,7 @@ import { FiX } from "react-icons/fi";
 import { FaWhatsapp, FaRegPaperPlane } from "react-icons/fa";
 import Logo from "./Logo";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { recordSend, sendsLeft } from "@/lib/contact-limit";
 
 // ============================================================
 // Contexto: permite abrir el modal desde Navbar, Pricing y
@@ -23,8 +25,15 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export type ContactTarget = {
   group: "web" | "software";
-  plan?: { name: string; price: number };
+  plan?: { name: string };
 };
+
+// Validación en el cliente (mismas reglas que app/api/contact/route.ts).
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const MIN_MENSAJE = 10;
+const MAX_MENSAJE = 2000;
+
+type FieldName = "nombre" | "correo" | "mensaje";
 
 type ContactModalContextValue = {
   isOpen: boolean;
@@ -94,9 +103,16 @@ function ContactModalBody({
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
   const [mensaje, setMensaje] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">(
-    "idle"
-  );
+  /** Honeypot: campo oculto que solo rellenan los bots. */
+  const [empresa, setEmpresa] = useState("");
+  /** Campo con el aviso de validación visible. */
+  const [fieldError, setFieldError] = useState<FieldName | null>(null);
+  const nombreRef = useRef<HTMLInputElement>(null);
+  const correoRef = useRef<HTMLInputElement>(null);
+  const mensajeRef = useRef<HTMLTextAreaElement>(null);
+  const [status, setStatus] = useState<
+    "idle" | "sending" | "success" | "error" | "limit"
+  >("idle");
 
   // Cerrar con Escape + bloquear scroll del fondo
   useEffect(() => {
@@ -123,9 +139,7 @@ function ContactModalBody({
       ? t.modal.waWeb
       : t.modal.waSoftware;
   const waMessage = activePlan
-    ? waTemplate
-        .replace("{plan}", activePlan.name)
-        .replace("{price}", `$${activePlan.price}`)
+    ? waTemplate.replace("{plan}", activePlan.name)
     : waTemplate;
   const waHref = `https://wa.me/${t.site.whatsapp}?text=${encodeURIComponent(
     waMessage
@@ -134,16 +148,40 @@ function ContactModalBody({
   const interestLabel =
     group === "web" ? t.modal.interestWeb : t.modal.interestSoftware;
 
+  // Envíos que le quedan a este correo en las últimas 24 h.
+  const left = sendsLeft(correo);
+  const blocked = left <= 0;
+
+  /** Valora los campos; si hay uno mal, avisa, lo marca y le pone el foco. */
+  function validateFields(): FieldName | null {
+    const text = mensaje.trim();
+    const invalid: FieldName | null = !nombre.trim()
+      ? "nombre"
+      : !EMAIL_RE.test(correo.trim())
+        ? "correo"
+        : text.length < MIN_MENSAJE || text.length > MAX_MENSAJE
+          ? "mensaje"
+          : null;
+
+    if (invalid) {
+      setFieldError(invalid);
+      const refs = { nombre: nombreRef, correo: correoRef, mensaje: mensajeRef };
+      refs[invalid].current?.focus();
+    }
+    return invalid;
+  }
+
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const endpoint = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
-    if (!endpoint) {
-      setStatus("error");
+    if (blocked) {
+      setStatus("limit");
       return;
     }
+    // Aviso inmediato en el navegador: no se gasta el intento.
+    if (validateFields()) return;
     setStatus("sending");
     try {
-      const res = await fetch(endpoint, {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -154,11 +192,33 @@ function ContactModalBody({
           correo,
           mensaje,
           interes: activePlan
-            ? `${interestLabel} — ${t.modal.planLabel}: ${activePlan.name} ($${activePlan.price})`
+            ? `${interestLabel} — ${t.modal.planLabel}: ${activePlan.name}`
             : interestLabel,
+          empresa,
         }),
       });
-      if (!res.ok) throw new Error("Formspree error");
+      if (res.status === 429) {
+        // El servidor ya no acepta más mensajes de este correo.
+        recordSend(correo);
+        setStatus("limit");
+        return;
+      }
+      if (res.status === 400) {
+        // El servidor dice cuál campo falló: se muestra su aviso.
+        const data = (await res.json().catch(() => null)) as {
+          field?: string;
+        } | null;
+        const field = data?.field;
+        if (field === "nombre" || field === "correo" || field === "mensaje") {
+          setFieldError(field);
+          setStatus("idle");
+          return;
+        }
+        setStatus("error");
+        return;
+      }
+      if (!res.ok) throw new Error("Contact API error");
+      recordSend(correo);
       setStatus("success");
     } catch {
       setStatus("error");
@@ -236,7 +296,7 @@ function ContactModalBody({
 
         {activePlan ? (
           <p className="mt-3 inline-flex rounded-full bg-carbon px-4 py-1.5 text-xs font-semibold text-floral">
-            {t.modal.planLabel}: {activePlan.name} (${activePlan.price})
+            {t.modal.planLabel}: {activePlan.name}
           </p>
         ) : null}
 
@@ -266,45 +326,129 @@ function ContactModalBody({
           </div>
         ) : (
           <form onSubmit={onSubmit} className="space-y-3">
+            <div>
+              <input
+                required
+                ref={nombreRef}
+                type="text"
+                autoComplete="name"
+                value={nombre}
+                onChange={(e) => {
+                  setNombre(e.target.value);
+                  if (fieldError === "nombre") setFieldError(null);
+                }}
+                aria-label={t.modal.form.name}
+                aria-invalid={fieldError === "nombre"}
+                placeholder={t.modal.form.namePlaceholder}
+                className={`w-full rounded-xl border bg-white px-4 py-3 text-sm text-carbon placeholder:text-charcoal/45 focus:outline-none ${
+                  fieldError === "nombre"
+                    ? "border-paprika"
+                    : "border-silver focus:border-paprika"
+                }`}
+              />
+              {fieldError === "nombre" ? (
+                <p className="mt-1 text-xs font-medium text-paprika-deep">
+                  {t.modal.form.errorName}
+                </p>
+              ) : null}
+            </div>
+
+            <div>
+              <input
+                required
+                ref={correoRef}
+                type="email"
+                autoComplete="email"
+                value={correo}
+                onChange={(e) => {
+                  setCorreo(e.target.value);
+                  if (fieldError === "correo") setFieldError(null);
+                }}
+                aria-label={t.modal.form.email}
+                aria-invalid={fieldError === "correo"}
+                placeholder={t.modal.form.emailPlaceholder}
+                className={`w-full rounded-xl border bg-white px-4 py-3 text-sm text-carbon placeholder:text-charcoal/45 focus:outline-none ${
+                  fieldError === "correo"
+                    ? "border-paprika"
+                    : "border-silver focus:border-paprika"
+                }`}
+              />
+              {fieldError === "correo" ? (
+                <p className="mt-1 text-xs font-medium text-paprika-deep">
+                  {t.modal.form.errorEmail}
+                </p>
+              ) : null}
+            </div>
+
+            <div>
+              <textarea
+                required
+                ref={mensajeRef}
+                rows={4}
+                value={mensaje}
+                onChange={(e) => {
+                  setMensaje(e.target.value);
+                  if (fieldError === "mensaje") setFieldError(null);
+                }}
+                aria-label={t.modal.form.message}
+                aria-invalid={fieldError === "mensaje"}
+                placeholder={t.modal.form.messagePlaceholder}
+                className={`w-full resize-none rounded-xl border bg-white px-4 py-3 text-sm text-carbon placeholder:text-charcoal/45 focus:outline-none ${
+                  fieldError === "mensaje"
+                    ? "border-paprika"
+                    : "border-silver focus:border-paprika"
+                }`}
+              />
+              {fieldError === "mensaje" ? (
+                <p className="mt-1 text-xs font-medium text-paprika-deep">
+                  {t.modal.form.errorMessage}
+                </p>
+              ) : (
+                <p className="mt-1 flex items-center justify-between text-xs">
+                  <span className="text-charcoal/55">
+                    {t.modal.form.hintMessage}
+                  </span>
+                  <span
+                    className={
+                      mensaje.trim().length < MIN_MENSAJE
+                        ? "text-charcoal/40"
+                        : "text-charcoal/70"
+                    }
+                  >
+                    {mensaje.trim().length}/{MIN_MENSAJE}
+                  </span>
+                </p>
+              )}
+            </div>
+
+            {/* Honeypot: oculto para las personas, irresistible para los bots */}
             <input
-              required
               type="text"
-              autoComplete="name"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              aria-label={t.modal.form.name}
-              placeholder={t.modal.form.namePlaceholder}
-              className="w-full rounded-xl border border-silver bg-white px-4 py-3 text-sm text-carbon placeholder:text-charcoal/45 focus:border-paprika focus:outline-none"
-            />
-            <input
-              required
-              type="email"
-              autoComplete="email"
-              value={correo}
-              onChange={(e) => setCorreo(e.target.value)}
-              aria-label={t.modal.form.email}
-              placeholder={t.modal.form.emailPlaceholder}
-              className="w-full rounded-xl border border-silver bg-white px-4 py-3 text-sm text-carbon placeholder:text-charcoal/45 focus:border-paprika focus:outline-none"
-            />
-            <textarea
-              required
-              rows={4}
-              value={mensaje}
-              onChange={(e) => setMensaje(e.target.value)}
-              aria-label={t.modal.form.message}
-              placeholder={t.modal.form.messagePlaceholder}
-              className="w-full resize-none rounded-xl border border-silver bg-white px-4 py-3 text-sm text-carbon placeholder:text-charcoal/45 focus:border-paprika focus:outline-none"
+              value={empresa}
+              onChange={(e) => setEmpresa(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="absolute -left-[9999px] h-px w-px overflow-hidden opacity-0"
             />
 
-            {status === "error" ? (
+            {blocked || status === "limit" ? (
+              <p className="text-sm font-medium text-paprika-deep">
+                {t.modal.form.limit}
+              </p>
+            ) : status === "error" ? (
               <p className="text-sm font-medium text-paprika-deep">
                 {t.modal.form.error}
+              </p>
+            ) : left === 1 ? (
+              <p className="text-xs text-charcoal/60">
+                {t.modal.form.remaining.replace("{n}", "1")}
               </p>
             ) : null}
 
             <button
               type="submit"
-              disabled={status === "sending"}
+              disabled={status === "sending" || blocked}
               className="flex w-full items-center justify-center gap-2 rounded-full bg-carbon px-6 py-3.5 text-sm font-semibold text-floral transition hover:bg-charcoal disabled:cursor-not-allowed disabled:opacity-60"
             >
               <FaRegPaperPlane size={15} />

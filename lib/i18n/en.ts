@@ -285,6 +285,13 @@ export const en: Dictionary = {
       sending: "Sending…",
       success: "Message sent! I'll reply within 24 hours.",
       error: "Couldn't send. Email me at josmarsanteliz@gmail.com or use WhatsApp.",
+      hintMessage: "At least 10 characters",
+      errorName: "Enter your name.",
+      errorEmail: "Enter a valid email, for example name@email.com.",
+      errorMessage: "Your message must be at least 10 characters long.",
+      limit:
+        "You've sent 2 messages in the last 24 hours. Message me on WhatsApp or come back tomorrow.",
+      remaining: "You have {n} of the 2 messages allowed every 24 hours.",
     },
   },
 
