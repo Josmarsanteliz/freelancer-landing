@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiCheck } from "react-icons/fi";
 import SectionHeader from "./SectionHeader";
@@ -15,11 +14,9 @@ type PlanCardProps = {
   plan: Plan;
   group: PlanGroup;
   index: number;
-  usdRate: number | null;
-  bsFormat: Intl.NumberFormat;
 };
 
-function PlanCard({ plan, group, index, usdRate, bsFormat }: PlanCardProps) {
+function PlanCard({ plan, group, index }: PlanCardProps) {
   const { t } = useLanguage();
   const { open: openContact } = useContactModal();
 
@@ -56,35 +53,14 @@ function PlanCard({ plan, group, index, usdRate, bsFormat }: PlanCardProps) {
         {plan.description}
       </p>
 
-      <div className="mt-6 flex items-baseline gap-1">
-        {plan.from ? (
-          <span
-            className={`text-lg font-semibold ${
-              plan.featured ? "text-silver" : "text-charcoal/70"
-            }`}
-          >
-            {t.pricing.from}
-          </span>
-        ) : null}
-        <span className="font-display text-5xl font-bold">${plan.price}</span>
-        <span
-          className={`text-sm ${
-            plan.featured ? "text-silver" : "text-charcoal/70"
-          }`}
-        >
-          {t.pricing.perProject}
-        </span>
-      </div>
-
-      {usdRate ? (
+      <div className="mt-6 space-y-1">
+        <p className="font-display text-5xl font-bold">{t.pricing.requestNow}</p>
         <p
-          className={`mt-1 text-[11px] ${
-            plan.featured ? "text-silver/80" : "text-charcoal/55"
-          }`}
+          className={`text-xs ${plan.featured ? "text-silver/80" : "text-charcoal/55"}`}
         >
-          ≈ Bs. {bsFormat.format(plan.price * usdRate)}
+          {t.pricing.requestNote}
         </p>
-      ) : null}
+      </div>
 
       <ul className="mt-8 flex flex-1 flex-col gap-3">
         {plan.features.map((feature) => (
@@ -101,9 +77,7 @@ function PlanCard({ plan, group, index, usdRate, bsFormat }: PlanCardProps) {
 
       <button
         type="button"
-        onClick={() =>
-          openContact({ group, plan: { name: plan.name, price: plan.price } })
-        }
+        onClick={() => openContact({ group, plan: { name: plan.name } })}
         className={`mt-8 rounded-full px-5 py-3 text-center text-sm font-semibold transition ${
           plan.featured
             ? "bg-paprika text-carbon hover:bg-paprika-light"
@@ -117,29 +91,10 @@ function PlanCard({ plan, group, index, usdRate, bsFormat }: PlanCardProps) {
 }
 
 export default function Pricing() {
-  const { t, lang } = useLanguage();
-  const [usdRate, setUsdRate] = useState<number | null>(null);
-
-  // Tasa del dólar oficial (DolarAPI) para mostrar el equivalente en Bs.
-  useEffect(() => {
-    fetch("https://ve.dolarapi.com/v1/dolares/oficial")
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("rate"))))
-      .then((data: { promedio?: number; venta?: number }) => {
-        const rate = data.promedio || data.venta;
-        if (rate) setUsdRate(rate);
-      })
-      .catch(() => {
-        // Sin acceso a la API: no se muestra el precio en bolívares.
-      });
-  }, []);
-
-  const bsFormat = new Intl.NumberFormat(lang === "en" ? "en-US" : "es-VE", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+  const { t } = useLanguage();
 
   return (
-    <section id="precios" className="py-24">
+    <section id="planes" className="py-24">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeader
           eyebrow={t.pricing.eyebrow}
@@ -164,8 +119,6 @@ export default function Pricing() {
                     plan={plan}
                     group={group}
                     index={i}
-                    usdRate={usdRate}
-                    bsFormat={bsFormat}
                   />
                 )
               )}

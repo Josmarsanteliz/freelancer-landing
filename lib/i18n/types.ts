@@ -19,8 +19,9 @@ export type StackItem = {
 
 export type Plan = {
   name: string;
+  /** Precio de referencia. Reservado: no se muestra en la UI por ahora. */
   price: number;
-  /** Muestra "Desde" antes del precio (ej: Desde $2.500). */
+  /** Marca planes con precio base ("Desde $2.500"). Reservado, no se muestra. */
   from?: boolean;
   description: string;
   features: string[];
@@ -84,12 +85,13 @@ export type Dictionary = {
     title: string;
     subtitle: string;
     badge: string;
-    perProject: string;
     cta: string;
     customTitle: string;
     customLink: string;
-    /** Etiqueta "Desde" para planes con precio base. */
-    from: string;
+    /** Titular que reemplaza al precio en cada tarjeta. */
+    requestNow: string;
+    /** Nota pequeña bajo el titular. */
+    requestNote: string;
     groups: {
       web: string;
       software: string;
@@ -134,7 +136,7 @@ export type Dictionary = {
     planLabel: string;
     whatsappLabel: string;
     orLabel: string;
-    /** Mensajes de WhatsApp. {plan} y {price} solo se usan si hay plan. */
+    /** Mensajes de WhatsApp. {plan} solo se usa si hay plan. */
     waWeb: string;
     waSoftware: string;
     waWebPlan: string;

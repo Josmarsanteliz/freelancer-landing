@@ -20,7 +20,7 @@ export const es: Dictionary = {
   nav: {
     links: [
       { href: "#stack", label: "Stack" },
-      { href: "#precios", label: "Precios" },
+      { href: "#planes", label: "Planes" },
       { href: "#proyectos", label: "Proyectos" },
       { href: "#sobre-mi", label: "Sobre mí" },
       { href: "#faq", label: "FAQ" },
@@ -38,7 +38,7 @@ export const es: Dictionary = {
     words: ["Landings rápidas", "Webs corporativas", "Apps full-stack", "E-commerce"],
     pitch:
       "Desarrollo landings, webs corporativas y aplicaciones full-stack con Next.js, TypeScript y Supabase. Enfocado en entregar rápido, con diseño cuidado y resultados reales.",
-    ctaPrimary: "Ver precios",
+    ctaPrimary: "Ver planes",
     ctaSecondary: "Escríbeme",
   },
 
@@ -60,16 +60,16 @@ export const es: Dictionary = {
   },
 
   pricing: {
-    eyebrow: "Precios",
+    eyebrow: "Planes",
     title: "Paquetes por proyecto",
     subtitle:
-      "Precios claros y sin sorpresas. Elige el paquete que se ajuste a tu idea y empecemos hoy.",
+      "Paquetes claros y sin sorpresas. Elige el paquete que se ajuste a tu idea y empecemos hoy.",
     badge: "Más popular",
-    perProject: "/ proyecto",
     cta: "Empezar proyecto",
     customTitle: "¿Necesitas algo a medida?",
     customLink: "Cuéntanos tu idea",
-    from: "Desde",
+    requestNow: "Solicita ya",
+    requestNote: "Presupuesto sin compromiso · Respuesta en menos de 24 h",
     groups: {
       web: "Páginas web",
       software: "Aplicaciones de software",
@@ -248,7 +248,7 @@ export const es: Dictionary = {
       {
         question: "¿Puedo pedir cambios al plan elegido?",
         answer:
-          "Claro. Conversamos tu caso y armamos un paquete a medida. Los precios son de referencia: el presupuesto final depende del alcance.",
+          "Claro. Conversamos tu caso y armamos un paquete a medida; el presupuesto final depende del alcance.",
       },
     ],
   },
@@ -272,9 +272,9 @@ export const es: Dictionary = {
     waWeb: "Hola Josmar 👋, me interesa una página web. ¿Hablamos?",
     waSoftware: "Hola Josmar 👋, necesito una aplicación de software. ¿Hablamos?",
     waWebPlan:
-      "Hola Josmar 👋, me interesa el plan {plan} ({price}) para mi página web. ¿Hablamos?",
+      "Hola Josmar 👋, me interesa el plan {plan} para mi página web. ¿Hablamos?",
     waSoftwarePlan:
-      "Hola Josmar 👋, me interesa el plan {plan} ({price}) para mi aplicación de software. ¿Hablamos?",
+      "Hola Josmar 👋, me interesa el plan {plan} para mi aplicación de software. ¿Hablamos?",
     form: {
       name: "Tu nombre",
       namePlaceholder: "Cómo te llamas",

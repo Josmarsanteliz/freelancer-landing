@@ -22,7 +22,7 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "Josmar Santeliz — Desarrollador de Software Freelance",
   description:
-    "Landings, webs corporativas y aplicaciones full-stack con Next.js, TypeScript y Supabase. Paquetes desde $100.",
+    "Landings, webs corporativas y aplicaciones full-stack con Next.js, TypeScript y Supabase.",
   openGraph: {
     title: "Josmar Santeliz — Desarrollador de Software Freelance",
     description:

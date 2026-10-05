@@ -20,7 +20,7 @@ export const en: Dictionary = {
   nav: {
     links: [
       { href: "#stack", label: "Stack" },
-      { href: "#precios", label: "Pricing" },
+      { href: "#planes", label: "Plans" },
       { href: "#proyectos", label: "Projects" },
       { href: "#sobre-mi", label: "About me" },
       { href: "#faq", label: "FAQ" },
@@ -38,7 +38,7 @@ export const en: Dictionary = {
     words: ["Fast landings", "Corporate websites", "Full-stack apps", "E-commerce"],
     pitch:
       "I build landings, corporate websites and full-stack applications with Next.js, TypeScript and Supabase. Focused on delivering fast, with careful design and real results.",
-    ctaPrimary: "See prices",
+    ctaPrimary: "See plans",
     ctaSecondary: "Write me",
   },
 
@@ -60,16 +60,16 @@ export const en: Dictionary = {
   },
 
   pricing: {
-    eyebrow: "Pricing",
+    eyebrow: "Plans",
     title: "Packages per project",
     subtitle:
-      "Clear prices with no surprises. Pick the package that fits your idea and let's start today.",
+      "Clear packages with no surprises. Pick the one that fits your idea and let's start today.",
     badge: "Most popular",
-    perProject: "/ project",
     cta: "Start project",
     customTitle: "Need something custom?",
     customLink: "Tell us your idea",
-    from: "From",
+    requestNow: "Request now",
+    requestNote: "No-obligation quote · Reply within 24 hours",
     groups: {
       web: "Web pages",
       software: "Software applications",
@@ -248,7 +248,7 @@ export const en: Dictionary = {
       {
         question: "Can I request changes to the chosen plan?",
         answer:
-          "Of course. We'll talk through your case and build a custom package. Prices are a reference: the final budget depends on the scope.",
+          "Of course. We'll talk through your case and build a custom package; the final budget depends on the scope.",
       },
     ],
   },
@@ -272,9 +272,9 @@ export const en: Dictionary = {
     waWeb: "Hi Josmar 👋, I'm interested in a website. Shall we talk?",
     waSoftware: "Hi Josmar 👋, I need a software application. Shall we talk?",
     waWebPlan:
-      "Hi Josmar 👋, I'm interested in the {plan} plan ({price}) for my website. Shall we talk?",
+      "Hi Josmar 👋, I'm interested in the {plan} plan for my website. Shall we talk?",
     waSoftwarePlan:
-      "Hi Josmar 👋, I'm interested in the {plan} plan ({price}) for my software application. Shall we talk?",
+      "Hi Josmar 👋, I'm interested in the {plan} plan for my software application. Shall we talk?",
     form: {
       name: "Your name",
       namePlaceholder: "What's your name",

@@ -1,6 +1,6 @@
 # Freelancer Landing — Josmar Santeliz
 
-Landing page animada para un desarrollador de software freelance. Muestra los servicios, precios por paquete y el stack tecnológico.
+Landing page animada para un desarrollador de software freelance. Muestra los servicios, los paquetes por proyecto y el stack tecnológico.
 
 ## 🛠 Stack
 
@@ -36,11 +36,11 @@ Todo el contenido editable está centralizado en [`lib/data.ts`](lib/data.ts):
 | Nombre, email, LinkedIn, GitHub | `SITE` |
 | Palabras rotativas del hero | `HERO_WORDS` |
 | Stack mostrado | `STACK` |
-| Precios y paquetes | `PLANS` |
+| Paquetes por proyecto | `PLANS` |
 | Proyectos del portafolio | `PROJECTS` |
 | Estadísticas "Sobre mí" | `STATS` |
 | Preguntas del FAQ | `FAQS` |
 
 ## 🧩 Secciones
 
-Hero (máquina de escribir) → Stack → Precios → Portafolio → Sobre mí → FAQ → Contacto → Footer
+Hero (máquina de escribir) → Stack → Planes → Portafolio → Sobre mí → FAQ → Contacto → Footer

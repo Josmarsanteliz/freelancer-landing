@@ -202,7 +202,7 @@ export default function Hero() {
           className="mt-10 flex flex-wrap gap-4"
         >
           <a
-            href="#precios"
+            href="#planes"
             className="group inline-flex items-center gap-2 rounded-full bg-paprika px-6 py-3 text-sm font-semibold text-carbon shadow-lg shadow-paprika/25 transition hover:bg-paprika-light"
           >
             {t.hero.ctaPrimary}
